@@ -1,11 +1,3 @@
-# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
-"""
-Train a YOLOv5 model on a custom dataset
-
-Usage:
-    $ python path/to/train.py --data coco128.yaml --weights yolov5s.pt --img 640
-"""
-
 import argparse
 import logging
 import math
@@ -56,11 +48,7 @@ RANK = int(os.getenv('RANK', -1))
 WORLD_SIZE = int(os.getenv('WORLD_SIZE', 1))
 
 
-def train(hyp,  # path/to/hyp.yaml or hyp dictionary
-          opt,
-          device,
-          callbacks
-          ):
+def train(hyp, opt, device, callbacks):
     save_dir, epochs, batch_size, weights, single_cls, evolve, data, cfg, resume, noval, nosave, workers, freeze, = \
         Path(opt.save_dir), opt.epochs, opt.batch_size, opt.weights, opt.single_cls, opt.evolve, opt.data, opt.cfg, \
         opt.resume, opt.noval, opt.nosave, opt.workers, opt.freeze
@@ -105,7 +93,7 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
     nc = 1 if single_cls else int(data_dict['nc'])  # number of classes
     names = ['item'] if single_cls and len(data_dict['names']) != 1 else data_dict['names']  # class names
     assert len(names) == nc, f'{len(names)} names found for nc={nc} dataset in {data}'  # check
-    is_coco = data.endswith('coco.yaml') and nc == 80  # COCO dataset
+    is_coco = data.endswith('coco128.yaml') and nc == 1  # COCO dataset
 
     # Model
     check_suffix(weights, '.pt')  # check weights
@@ -435,9 +423,9 @@ def parse_opt(known=False):
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', type=str, default=ROOT / 'yolov5s.pt', help='initial weights path')
     parser.add_argument('--cfg', type=str, default='', help='model.yaml path')
-    parser.add_argument('--data', type=str, default=ROOT / 'data/coco128.yaml', help='dataset.yaml path')
+    parser.add_argument('--data', type=str, default=ROOT / 'data/coin.yaml', help='coin.yaml path')
     parser.add_argument('--hyp', type=str, default=ROOT / 'data/hyps/hyp.scratch.yaml', help='hyperparameters path')
-    parser.add_argument('--epochs', type=int, default=300)
+    parser.add_argument('--epochs', type=int, default=30)
     parser.add_argument('--batch-size', type=int, default=16, help='total batch size for all GPUs')
     parser.add_argument('--imgsz', '--img', '--img-size', type=int, default=640, help='train, val image size (pixels)')
     parser.add_argument('--rect', action='store_true', help='rectangular training')
